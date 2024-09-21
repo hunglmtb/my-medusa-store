@@ -33,6 +33,11 @@ const DATABASE_URL =
 
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 
+const BACKEND_URL = process.env.BACKEND_URL || "localhost:9000"
+const ADMIN_URL = process.env.ADMIN_URL || "localhost:7000"
+const STORE_URL = process.env.STORE_URL || "localhost:8000"
+const CredentialJsonPath = process.env.FIREBASE_CREDS_JSON_PATH || "./novatopos-firebase-adminsdk-dbeym-0e5086a5e4.json"
+
 const plugins = [
   `medusa-fulfillment-manual`,
   `medusa-payment-manual`,
@@ -52,6 +57,33 @@ const plugins = [
       },
     },
   },
+  {
+    resolve: "medusa-plugin-auth",
+    /** @type {import('medusa-plugin-auth').AuthOptions} */
+    options: [
+      {
+        type: "firebase",
+        // strict: "all", // or "none" or "store" or "admin"
+        strict: "none",
+        identifier: "firebase",
+        credentialJsonPath: CredentialJsonPath,
+        admin: {
+          // authPath: '/admin/auth/firebase',
+          // expiresIn: 24 * 60 * 60 * 1000,
+          // verifyCallback: (container, decodedToken, strict) => {
+          //    // implement your custom verify callback here if you need it
+          // }
+        },
+        store: {
+          // authPath: '/store/auth/firebase',
+          // expiresIn: 24 * 60 * 60 * 1000,
+          // verifyCallback: (container, decodedToken, strict) => {
+          //    // implement your custom verify callback here if you need it
+          // }
+        }
+      }
+    ]
+  }
 ];
 
 const modules = {
