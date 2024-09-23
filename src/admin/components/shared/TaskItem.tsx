@@ -1,20 +1,34 @@
 import React, { memo, PropsWithChildren, useCallback, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { HandingStep, TaskProperties } from '../../utils/handing-flow'
+// import { useTranslation } from 'react-i18next'
 import { LineItem } from '@medusajs/medusa/dist/models/line-item'
-import { useAdminOrderEditAddLineItem, useAdminOrderEditDeleteLineItem } from 'medusa-react'
+import { useAdminDeleteOrderEditItemChange, useAdminOrderEditAddLineItem, useAdminOrderEditDeleteLineItem } from 'medusa-react'
+import { Button } from '@medusajs/ui'
+import { OrderEdit } from '@medusajs/medusa'
+import { HandingStep, TaskProperties } from '../../utils/handing-flow'
 // @ts-ignore
+// eslint-disable-next-line import/extensions
 import useNotification from '../../../hooks/use-notification'
 // @ts-ignore
+// eslint-disable-next-line import/extensions
 import { getErrorMessage } from '../../../utils/error-messages'
-import { Button } from '@medusajs/ui'
 
 const TaskItem = memo(
-  ({ item, orderEditId, property, variantId, step, children }: PropsWithChildren<{ item?: LineItem; orderEditId?: string; property: TaskProperties; variantId: string; step: HandingStep }>) => {
-    const { t } = useTranslation()
+  ({
+    item,
+    orderEdit,
+    property,
+    variantId,
+    step,
+    preSave,
+    children,
+  }: PropsWithChildren<{ item?: LineItem; orderEdit?: OrderEdit; property: TaskProperties; variantId: string; step: HandingStep; preSave?: () => Promise<boolean> }>) => {
+    // const { t } = useTranslation()
     const notification = useNotification()
     const [isSubmitting, setIsSubmitting] = useState(false)
+    const orderEditId = orderEdit?.id
     const { mutateAsync: addLineItem } = useAdminOrderEditAddLineItem(orderEditId)
+    const itemShouldChangeId = item?.id ? orderEdit?.changes?.find((c) => c.line_item_id === item?.id)?.id : undefined
+    const { mutateAsync: removeChangeItem } = useAdminDeleteOrderEditItemChange(orderEditId, itemShouldChangeId)
     const { mutateAsync: removeLineItem } = useAdminOrderEditDeleteLineItem(orderEditId, item?.id)
 
     const setProperty = useCallback(
@@ -25,20 +39,32 @@ const TaskItem = memo(
         setIsSubmitting(true)
         const submit = () =>
           addLineItem({ variant_id: variantId, quantity: 1, metadata })
-            .then(({ order_edit }) => {
+            .then(() => {
               notification('Send success', 'continue your work', 'success')
-              console.log('order_edit', order_edit)
             })
             .catch((err) => notification('Error', getErrorMessage(err), 'error'))
             .finally(() => setIsSubmitting(false))
-        if (item?.id) {
-          removeLineItem()
-            .then((r) => submit())
-            .catch((err) => notification('Error', getErrorMessage(err), 'error'))
-            .finally(() => setIsSubmitting(false))
-        } else submit()
+        const save = () => {
+          if (itemShouldChangeId) {
+            removeChangeItem()
+              .then(() => submit())
+              .catch((err) => notification('Error', getErrorMessage(err), 'error'))
+              .finally(() => setIsSubmitting(false))
+          } else if (item?.id) {
+            removeLineItem()
+              .then(() => submit())
+              .catch((err) => notification('Error', getErrorMessage(err), 'error'))
+              .finally(() => setIsSubmitting(false))
+          } else submit()
+        }
+        if (preSave) {
+          preSave().then((r) => {
+            if (r) save()
+            else setIsSubmitting(false)
+          })
+        } else save()
       },
-      [variantId, addLineItem, removeLineItem, orderEditId, item],
+      [variantId, orderEditId, item, itemShouldChangeId],
     )
 
     return (
@@ -63,4 +89,4 @@ const TaskItem = memo(
   },
 )
 
-export default TaskItem;
+export default TaskItem

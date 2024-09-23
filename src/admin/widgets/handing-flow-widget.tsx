@@ -2,7 +2,7 @@ import type { WidgetConfig } from '@medusajs/admin'
 import React from 'react'
 import { OrderDetailsWidgetProps } from '@medusajs/admin/types/widgets'
 import OrderEditForHandingStepContextProvider from '../components/shared/context/OrderEditForHandingStepContext'
-import HandingFlow from "../components/shared/HandingFlow";
+import HandingFlow from '../components/shared/HandingFlow'
 
 const HandingFlowWidget = ({ order }: OrderDetailsWidgetProps) => (
   <div>
@@ -13,7 +13,7 @@ const HandingFlowWidget = ({ order }: OrderDetailsWidgetProps) => (
 )
 
 export const config: WidgetConfig = {
-    zone: "order.details.fullfillment.after",
+  zone: 'order.details.fullfillment.after',
 }
 
 export default HandingFlowWidget
