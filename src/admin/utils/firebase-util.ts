@@ -1,29 +1,27 @@
 import { initializeApp } from 'firebase/app'
-import {FacebookAuthProvider, getAuth, GoogleAuthProvider} from 'firebase/auth'
-import {Auth, User} from "@firebase/auth";
+import { FacebookAuthProvider, getAuth, GoogleAuthProvider } from 'firebase/auth'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Auth, User } from '@firebase/auth'
 // @ts-ignore
-import {MEDUSA_BACKEND_URL} from "../../constants/medusa-backend-url"
+// eslint-disable-next-line import/extensions
+import { MEDUSA_BACKEND_URL } from '../../constants/medusa-backend-url'
 
-
-export const uiConfig= {
+export const uiConfig = {
   signInFlow: 'popup',
-  signInOptions: [
-    GoogleAuthProvider.PROVIDER_ID,
-    FacebookAuthProvider.PROVIDER_ID,
-  ],
+  signInOptions: [GoogleAuthProvider.PROVIDER_ID, FacebookAuthProvider.PROVIDER_ID],
 }
 
 const authPath = 'admin/auth/firebase'
 const authUrl = `${MEDUSA_BACKEND_URL}/${authPath}` // 'http://localhost:9000/admin/auth/firebase'
 console.log('process.env', process.env)
 const firebaseConfig = {
-  "apiKey": process.env.MEDUSA_ADMIN_FIREBASE_API_KEY,
-  "authDomain": "novatopos.firebaseapp.com",
-  "projectId": "novatopos",
-  "storageBucket": "novatopos.appspot.com",
-  "messagingSenderId": "674597022011",
-  "appId": "1:674597022011:web:169de5ca81d0a87f5daf1e",
-  "measurementId": "G-7J27JSFXW9"
+  apiKey: process.env.MEDUSA_ADMIN_FIREBASE_API_KEY,
+  authDomain: 'novatopos.firebaseapp.com',
+  projectId: 'novatopos',
+  storageBucket: 'novatopos.appspot.com',
+  messagingSenderId: '674597022011',
+  appId: '1:674597022011:web:169de5ca81d0a87f5daf1e',
+  measurementId: 'G-7J27JSFXW9',
 }
 
 export interface FirebaseUIAuth {
@@ -40,11 +38,11 @@ const firebaseUIAuth: FirebaseUIAuth = {
     return fetch(authUrl, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
       },
-      credentials: 'include'
+      credentials: 'include',
     })
-  }
+  },
 }
 
 const initializeFirebaseApp = () => {
@@ -54,11 +52,11 @@ const initializeFirebaseApp = () => {
     firebaseAuth = getAuth(firebaseApp)
     firebaseAuth.onAuthStateChanged((user) => {
       firebaseUIAuth.currentUser = user
-      /*user?.getIdToken().then(token => {
+      /* user?.getIdToken().then(token => {
         firebaseUIAuth.firebaseLogin(token).then(session => {
           console.log('firebaseLogin session', session)
         })
-      })*/
+      }) */
     })
   } catch (e) {
     console.log(`initializeFirebaseApp error`, e)

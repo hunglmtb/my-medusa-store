@@ -22,8 +22,7 @@ try {
 } catch (e) {}
 
 // CORS when consuming Medusa from admin
-const ADMIN_CORS =
-  process.env.ADMIN_CORS || "http://localhost:7000,http://localhost:7001";
+const ADMIN_CORS = process.env.ADMIN_CORS || "http://localhost:7000,http://localhost:7001,http://localhost:7005,http://localhost:7006,http://localhost:80";
 
 // CORS to avoid issues when consuming Medusa from a client
 const STORE_CORS = process.env.STORE_CORS || "http://localhost:8000";
@@ -120,6 +119,7 @@ const projectConfig = {
   redis_url: REDIS_URL,
   senderName: 'VGO org',
   emailTemplates: {
+    registerProjectPlaced: process.env.SENDGRID_REGISTER_PROJECT_PLACED,
     sendGuidelines: process.env.SENDGRID_COMMON_ID
   }
 };

@@ -23,7 +23,9 @@
     "seed": "cross-env medusa seed -f ./data/seed.json",
     "start": "cross-env npm run build && medusa start",
     "start:custom": "cross-env npm run build && node --preserve-symlinks --trace-warnings index.js",
-    "dev": "cross-env npm run build:server && medusa develop"
+    "dev": "cross-env npm run build:server && medusa develop",
+    "s": "cross-env medusa start",
+    "ed": "set TIMING=1 && eslint --cache ./src"
   },
   "dependencies": {
     "@medusajs/admin": "^7.1.16",
@@ -167,7 +169,8 @@
     "webpack-cli": "^5.1.1",
     "webpack-dev-server": "4.15.0",
     "webpackbar": "^5.0.2",
-    "zod": "^3.22.2"
+    "zod": "^3.22.2",
+    "husky": "~9.1.6"
   },
   "husky": {
     "hooks": {

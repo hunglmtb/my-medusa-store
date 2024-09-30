@@ -39,5 +39,6 @@
     "no-plusplus": "off",
     "no-param-reassign": "off",
     "no-nested-ternary": "off"
-  }
+  },
+  "ignorePatterns": ["src/test/*","build/*","dist/*"]
 }

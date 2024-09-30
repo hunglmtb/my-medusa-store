@@ -1,0 +1,10 @@
+/.history/**
+/.next/**
+/.vscode/**
+/build/**
+/dist/**
+/node_modules/**
+/.cache/**
+/uploads/**
+/.github/**
+/wordpress/**
