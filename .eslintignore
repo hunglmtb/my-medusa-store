@@ -4,6 +4,7 @@
 /build/**
 /dist/**
 /node_modules/**
+!node_modules/@medusajs/admin-ui/ui
 /.cache/**
 /uploads/**
 /.github/**

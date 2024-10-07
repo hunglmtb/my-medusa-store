@@ -59,14 +59,13 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
     customer_id: customerId,
     email: customerEmail,
     // @ts-ignore
-    items: [{ title, quantity: 1, metadata }],
-    metadata: {},
+    items: [{ title, quantity: 1, thumbnail: metadata?.cover_image }],
+    metadata,
     region_id: regions[0].id,
     shipping_methods: [{ option_id: shippingOptions[0].id }],
     status: 'pending',
   }
   const draftOrder = await draftOrderService.create(draft)
-
   if (customerEmail && draftOrder) {
     const sendgridService = req.scope.resolve('sendgridService')
     const configModule = req.scope.resolve<AppConfigModule>('configModule')
