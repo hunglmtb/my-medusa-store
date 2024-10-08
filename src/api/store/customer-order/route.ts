@@ -77,6 +77,10 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
         templateId: emailTemplates.registerProjectPlaced,
         from: { name: senderName, email: from },
         to: customerEmail,
+        dynamicTemplateData: {
+          projectTitle: title,
+          ...metadata,
+        },
       }
       sendgridService.sendEmail(sendOptions)
     } else console.log('check sendgrid config')
