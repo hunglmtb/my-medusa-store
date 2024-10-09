@@ -32,7 +32,7 @@ const DATABASE_URL =
 
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 
-const BACKEND_URL = process.env.BACKEND_URL || "localhost:9000"
+const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:9000"
 const ADMIN_URL = process.env.ADMIN_URL || "localhost:7000"
 const STORE_URL = process.env.STORE_URL || "localhost:8000"
 const CredentialJsonPath = process.env.FIREBASE_CREDS_JSON_PATH || "./novatopos-firebase-adminsdk-dbeym-0e5086a5e4.json"
@@ -50,10 +50,13 @@ const plugins = [
     resolve: "@medusajs/admin",
     /** @type {import('@medusajs/admin').PluginOptions} */
     options: {
-      autoRebuild: true,
+      // autoRebuild: true,
+      serve: process.env.NODE_ENV === "development",
       develop: {
         open: process.env.OPEN_BROWSER !== "false",
       },
+      path: "/",
+      backend: BACKEND_URL,
     },
   },
   {
@@ -114,6 +117,7 @@ const projectConfig = {
   cookie_secret: process.env.COOKIE_SECRET || "supersecret",
   store_cors: STORE_CORS,
   database_url: DATABASE_URL,
+  worker_mode: process.env.MEDUSA_WORKER_MODE,
   admin_cors: ADMIN_CORS,
   // Uncomment the following lines to enable REDIS
   redis_url: REDIS_URL,

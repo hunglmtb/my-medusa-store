@@ -36,8 +36,6 @@ const FirebaseUIWidget = ({
     <div />
   ) : (
     <div>
-      <h1>FirebaseUIWidget Widget</h1>
-      <div>
         <FirebaseAuth
           firebaseAuth={firebaseUIAuth.firebaseAuth}
           uiConfig={{
@@ -87,7 +85,6 @@ const FirebaseUIWidget = ({
             }
           }}
         />
-      </div>
     </div>
   )
 }
