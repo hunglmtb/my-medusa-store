@@ -29,6 +29,7 @@
     "ed": "set TIMING=1 && eslint --cache ./src"
   },
   "dependencies": {
+    "@medusajs/admin": "^7.1.16",
     "@medusajs/cache-inmemory": "1.8.11",
     "@medusajs/cache-redis": "^1.9.2",
     "@medusajs/event-bus-local": "1.9.9",
