@@ -58,7 +58,7 @@ const HandingFlow = ({ order }: { order: Order }) => {
         customActionable={
           status !== 'canceled' && currentStep !== HandingStep.PreVisaApplication && currentStep !== HandingStep.RePreVisaApplication ? (
             <Button variant="secondary" size="small" onClick={() => requestCreateOrderEditForHanding(HandingStep.PreVisaApplication)}>
-              {currentStep === HandingStep.PendingApprove ? t('approve-request', 'Approved Request') : t('re-approve-request', 'Modify')}
+              {currentStep === HandingStep.PendingApprove ? t('approve-request', 'Begin Flow') : t('re-approve-request', 'Modify')}
             </Button>
           ) : null
         }

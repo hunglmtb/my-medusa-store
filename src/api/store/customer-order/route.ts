@@ -1,6 +1,8 @@
 import type { MedusaRequest, MedusaResponse } from '@medusajs/medusa'
-import { DraftOrderService, CustomerService, RegionService, ShippingOptionService } from '@medusajs/medusa'
+import { DraftOrderService, CustomerService, RegionService, ShippingOptionService, ProductService, ProductVariantService } from '@medusajs/medusa'
 import { DraftOrderCreateProps } from '@medusajs/medusa/dist/types/draft-orders'
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { MedusaError } from 'medusa-core-utils'
 import { AppConfigModule } from '../../../types/app'
 
 type PostBody = {
@@ -10,12 +12,11 @@ type PostBody = {
 
 export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   // @ts-ignore
-  const { customer_id: customerId, email } = req.user
-
-  if (!customerId) {
-    res.json({ message: `You have to sign in and have verified email ${customerId} ${email}` }).status(401)
-    return
+  if (!req.user?.customerId) {
+    throw new MedusaError(MedusaError.Types.UNAUTHORIZED, `You have to sign in and have verified email`)
   }
+  // @ts-ignore
+  const { customer_id: customerId, email } = req.user
   let customerEmail = email
   if (!customerEmail) {
     const customerService: CustomerService = req.scope.resolve('customerService')
@@ -28,38 +29,52 @@ export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   }
 
   const { title, metadata } = req.body as PostBody
-  // const productService: ProductService = req.scope.resolve('productService')
+
+  if (!metadata.slug) {
+    throw new MedusaError(MedusaError.Types.INVALID_DATA, `post body should have slug`)
+  }
+  const productService: ProductService = req.scope.resolve('productService')
   const regionService: RegionService = req.scope.resolve('regionService')
   const shippingOptionService: ShippingOptionService = req.scope.resolve('shippingOptionService')
   const draftOrderService: DraftOrderService = req.scope.resolve('draftOrderService')
-
-  /* const product = await productService.retrieveByExternalId(productExternalId)
-  if (!product) {
-    res.json({ message: `product not found by productExternalId ${productExternalId}` }).status(401)
-    return
-  } */
-  /* const variantId = product.variants?.[0].id
-  if (!variantId) {
-    res.json({ message: `could not find variantId of productExternalId: ${productExternalId}` }).status(401)
-    return
-  } */
+  const productVariantService: ProductVariantService = req.scope.resolve('productVariantService')
 
   const regions = await regionService.list()
   if (regions.length <= 0) {
-    res.json({ message: `empty regions` }).status(400)
-    return
+    throw new MedusaError(MedusaError.Types.INVALID_DATA, `empty regions`)
   }
   const shippingOptions = await shippingOptionService.list()
   if (shippingOptions.length <= 0) {
-    res.json({ message: `empty shipping Option` }).status(400)
-    return
+    throw new MedusaError(MedusaError.Types.INVALID_DATA, `empty shipping Option`)
   }
 
+  let variantId: string
+  const variants = await productVariantService.list({ sku: metadata.slug }, { skip: 0, take: 1, select: ['id'] })
+  if (variants.length <= 0) {
+    const products = await productService.list({ external_id: metadata.slug }, { skip: 0, take: 1, select: ['id'], relations: ['variants'] })
+    if (products.length > 0) {
+      variantId = products[0].variants?.[0].id
+    } else {
+      const product = await productService.create({
+        title: metadata.title,
+        thumbnail: metadata.cover_image,
+        external_id: metadata.slug,
+        variants: [{ sku: metadata.slug, title: metadata.title, inventory_quantity: 1, prices: [{ amount: 1, currency_code: 'usd' }] }],
+      })
+      const p = await productService.retrieve(product.id, { relations: ['variants'] })
+      if (p.variants?.length > 0) {
+        variantId = p.variants?.[0].id
+      }
+    }
+  } else variantId = variants[0].id
+
+  if (!variantId) {
+    throw new MedusaError(MedusaError.Types.UNEXPECTED_STATE, `variantId not found or could not be initial`)
+  }
   const draft: DraftOrderCreateProps = {
     customer_id: customerId,
     email: customerEmail,
-    // @ts-ignore
-    items: [{ title, quantity: 1, thumbnail: metadata?.cover_image }],
+    items: [{ title, quantity: 1, variant_id: variantId, unit_price: 1 }],
     metadata,
     region_id: regions[0].id,
     shipping_methods: [{ option_id: shippingOptions[0].id }],

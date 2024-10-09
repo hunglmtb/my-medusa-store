@@ -31,7 +31,7 @@ const PrepareVisaApplication = memo(({ order }: { order: Order }) => {
   const itemsByProperty = useMemo(() => {
     const currentItems = orderEdit?.items || items
     return keys.reduce((previous, prop) => {
-      previous[prop] = currentItems?.find((item) => !!item?.metadata[prop])
+      previous[prop] = currentItems?.find((item) => !!item?.metadata?.[prop])
       return previous
     }, {} as Record<string, LineItem | undefined>)
   }, [items, orderEdit?.items])

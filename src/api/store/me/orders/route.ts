@@ -1,5 +1,6 @@
 import type { MedusaRequest, MedusaResponse } from '@medusajs/medusa'
-import { defaultAdminDraftOrdersFields, defaultAdminDraftOrdersRelations, DraftOrderService, OrderService } from '@medusajs/medusa'
+import { defaultAdminDraftOrdersFields, defaultAdminDraftOrdersRelations, DraftOrderService } from '@medusajs/medusa'
+import { MedusaError } from 'medusa-core-utils'
 // import { defaultAdminOrdersFields, defaultAdminOrdersRelations } from '@medusajs/medusa/dist/types/orders'
 
 export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
@@ -7,8 +8,7 @@ export const GET = async (req: MedusaRequest, res: MedusaResponse) => {
   const { customer_id: customerId, email } = req.user
 
   if (!customerId) {
-    res.json({ message: `You have to sign in and have verified email ${customerId} ${email}` }).status(401)
-    return
+    throw new MedusaError(MedusaError.Types.UNAUTHORIZED, `You have to sign in and have verified email ${customerId} ${email}`)
   }
   const draftOrderService: DraftOrderService = req.scope.resolve('draftOrderService')
   const listDraftOrderConfig = {

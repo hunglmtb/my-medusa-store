@@ -1,4 +1,3 @@
-
 export enum TaskProperties {
   sendGuidelines,
   applicantPassportUrl,
@@ -15,10 +14,10 @@ export const TaskPropertiesTexts: Record<string, string> = {
 }
 
 export enum HandingStep {
-  PendingApprove= 'PENDING_APPROVE',
-  PreVisaApplication= 'PRE_VISA_APPLICATION',
-  SubmittedVisaApplication= 'SUBMITTED_VISA_APPLICATION',
-  RePreVisaApplication= 'RE_PRE_VISA_APPLICATION',
-  ReSubmittedVisaApplication= 'RE_SUBMITTED_VISA_APPLICATION',
-  COMPLETED= 'COMPLETED',
+  PendingApprove = 'PENDING_APPROVE',
+  PreVisaApplication = 'PRE_VISA_APPLICATION',
+  SubmittedVisaApplication = 'SUBMITTED_VISA_APPLICATION',
+  RePreVisaApplication = 'RE_PRE_VISA_APPLICATION',
+  ReSubmittedVisaApplication = 'RE_SUBMITTED_VISA_APPLICATION',
+  COMPLETED = 'COMPLETED',
 }
