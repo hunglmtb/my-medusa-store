@@ -13,7 +13,7 @@ export const uiConfig = {
 
 const authPath = 'admin/auth/firebase'
 const authUrl = `${MEDUSA_BACKEND_URL}/${authPath}` // 'http://localhost:9000/admin/auth/firebase'
-console.log('process.env', process.env)
+// console.log('process.env', process.env)
 const firebaseConfig = {
   apiKey: process.env.MEDUSA_ADMIN_FIREBASE_API_KEY,
   authDomain: 'novatopos.firebaseapp.com',

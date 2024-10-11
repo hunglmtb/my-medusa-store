@@ -12,7 +12,7 @@ type PostBody = {
 
 export const POST = async (req: MedusaRequest, res: MedusaResponse) => {
   // @ts-ignore
-  if (!req.user?.customerId) {
+  if (!req.user?.customer_id) {
     throw new MedusaError(MedusaError.Types.UNAUTHORIZED, `You have to sign in and have verified email`)
   }
   // @ts-ignore

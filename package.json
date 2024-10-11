@@ -26,7 +26,8 @@
     "start:custom": "cross-env npm run build && node --preserve-symlinks --trace-warnings index.js",
     "dev": "cross-env npm run build:server && medusa develop",
     "s": "cross-env medusa start",
-    "ed": "set TIMING=1 && eslint --cache ./src"
+    "ed": "set TIMING=1 && eslint --cache ./src",
+    "fdh": "firebase deploy --only hosting:vgo-org"
   },
   "dependencies": {
     "@medusajs/admin": "^7.1.16",

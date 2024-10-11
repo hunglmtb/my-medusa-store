@@ -32,7 +32,7 @@ const DATABASE_URL =
 
 const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 
-const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:9000"
+const MEDUSA_BACKEND_URL = process.env.MEDUSA_BACKEND_URL || "http://localhost:9000"
 const ADMIN_URL = process.env.ADMIN_URL || "localhost:7000"
 const STORE_URL = process.env.STORE_URL || "localhost:8000"
 const CredentialJsonPath = process.env.FIREBASE_CREDS_JSON_PATH || "./novatopos-firebase-adminsdk-dbeym-0e5086a5e4.json"
@@ -56,7 +56,7 @@ const plugins = [
         open: process.env.OPEN_BROWSER !== "false",
       },
       path: "/",
-      backend: BACKEND_URL,
+      backend: MEDUSA_BACKEND_URL,
     },
   },
   {
