@@ -30,7 +30,8 @@
     "fdh": "firebase deploy --only hosting:vgo-org"
   },
   "dependencies": {
-    "@medusajs/admin": "^7.1.16",
+    "@medusajs/admin": "../../medusa/packages/admin",
+    "@medusajs/admin-ui": "../../medusa/packages/admin-ui",
     "@medusajs/cache-inmemory": "1.8.11",
     "@medusajs/cache-redis": "^1.9.2",
     "@medusajs/event-bus-local": "1.9.9",
